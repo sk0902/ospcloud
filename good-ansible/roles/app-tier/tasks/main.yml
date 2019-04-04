@@ -1,0 +1,24 @@
+---
+# tasks file for roles/app-tier
+
+- name: Deploy {{ package }}
+  yum:
+   name: "{{package}}"
+   state: latest
+
+- name: Enable {{ package }} at boot
+  service:
+   name: "{{package}}"
+   state: started
+   enabled: true
+
+- name: Create Tomcat directory
+  file:
+   path: "{{web_root}}"
+   state: directory
+
+- name: Copy static index.html to tomcat webapps/ansible/index.html
+  template:
+   src: index.html.j2
+   dest: "{{web_root}}/index.html"
+   mode: 0644

@@ -1,0 +1,5 @@
+---
+# vars file for roles/app-tier
+
+package: tomcat
+web_root: /usr/share/tomcat/webapps/ROOT

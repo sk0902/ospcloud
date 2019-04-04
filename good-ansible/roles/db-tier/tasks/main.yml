@@ -1,0 +1,27 @@
+---
+# tasks file for roles/db-tier
+
+- name: Install Postgres
+  package:
+   name: "{{ item }}"
+   state: installed
+  with_items: "{{ db_pkg }}"
+
+#- name: Check if PostgreSQL is initialized.
+#  stat: 
+#   path: /var/lib/pgsql/data/PG_VERSION
+#    path: "{{ db['db_data_dir'] }}/PG_VERSION"
+#   register: pgdata_version
+
+- name: Ensure PostgreSQL database is initialized.
+  command: postgresql-setup initdb
+  args:
+   creates: "{{ db['db_data_dir'] }}/PG_VERSION"
+#  when: not pgdata_version.stat.exists
+#  become_user: "{{ db ['user'] }}"
+
+- name: Start Postgres
+  service:
+   name: postgresql.service
+   state: started
+   enabled: true
